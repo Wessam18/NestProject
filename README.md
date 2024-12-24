@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
@@ -97,3 +98,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+=======
+# NestProject
+full-stack application using React (with TypeScript) for the frontend and NestJS for the backend
+>>>>>>> c71994311800ee81754bff8720944229966fb752
