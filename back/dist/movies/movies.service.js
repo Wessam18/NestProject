@@ -17,7 +17,11 @@ let MoviesService = class MoviesService {
         this.prisma = prisma;
     }
     async getFavorites() {
-        return this.prisma.favoriteMovie.findMany();
+        const favorites = await this.prisma.favoriteMovie.findMany();
+        return favorites.map((movie) => ({
+            ...movie,
+            _id: movie.id,
+        }));
     }
     async addFavorite(data) {
         const movieData = {

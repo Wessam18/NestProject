@@ -3,6 +3,7 @@ export declare class MoviesController {
     private readonly moviesService;
     constructor(moviesService: MoviesService);
     getFavorites(): Promise<{
+        _id: number;
         id: number;
         title: string;
         year: string;

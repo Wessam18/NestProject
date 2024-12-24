@@ -6,8 +6,13 @@ export class MoviesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getFavorites() {
-    return this.prisma.favoriteMovie.findMany();
+    const favorites = await this.prisma.favoriteMovie.findMany();
+    return favorites.map((movie) => ({
+      ...movie,
+      _id: movie.id, // Add _id to match the frontend
+    }));
   }
+  
 
   async addFavorite(data: any) {
     const movieData = {
@@ -23,10 +28,6 @@ export class MoviesService {
       data: movieData,
     });
   }
-  
-  
-  
-  
 
   async updateFavorite(id: number, data: any) {
     return this.prisma.favoriteMovie.update({

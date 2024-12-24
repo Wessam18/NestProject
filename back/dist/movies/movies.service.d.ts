@@ -3,6 +3,7 @@ export declare class MoviesService {
     private readonly prisma;
     constructor(prisma: PrismaService);
     getFavorites(): Promise<{
+        _id: number;
         id: number;
         title: string;
         year: string;

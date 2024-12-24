@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Grid, Typography, Button, Card, CardActions, CardContent, CardMedia, TextField } from "@mui/material";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
-import axios from "axios"; // Import axios for making API requests
-import { useWishlist } from "../context/wishlistContext"; // Import custom hook
+import { Link, Navigate } from "react-router-dom";
+import axios from "axios";
+import { useWishlist } from "../context/wishlistContext";
 
 const WishlistPage = () => {
-  const [wishlistItems, setWishlistItems] = useState<any[]>([]); // State to hold the fetched wishlist items
-  const { removeFromWishlist, clearWishlist, updateWishlistItem } = useWishlist(); // Use custom hook
+  const [wishlistItems, setWishlistItems] = useState<any[]>([]);
+  const { updateWishlistItem } = useWishlist();
 
   // Fetch movies from the backend when the component mounts
   useEffect(() => {
@@ -22,12 +22,23 @@ const WishlistPage = () => {
     fetchMovies();
   }, []); // Empty dependency array ensures this runs only once when the component mounts
 
-  const handleUpdate = (id: string, updatedTitle: string) => {
-    const itemToUpdate = wishlistItems.find((item) => item._id === id);
-    if (itemToUpdate) {
-      updateWishlistItem(id, { ...itemToUpdate, title: updatedTitle });
+  const handleDelete = async (id: number) => { // Use `id` as a number
+    try {
+      await axios.delete(`http://localhost:3000/movies/favorites/${id}`);
+      setWishlistItems((prevItems) => prevItems.filter((item) => item.id !== id)); // Access `id`, not `_id`
+    } catch (error) {
+      console.error("Error deleting movie:", error);
     }
   };
+
+// Function to update the movie title
+const handleUpdate = (id: string, updatedTitle: string) => {
+  const itemToUpdate = wishlistItems.find((item) => item._id === id); // Change item.id to item._id
+  if (itemToUpdate) {
+    updateWishlistItem(id, { ...itemToUpdate, title: updatedTitle });
+  }
+};
+
 
   return (
     <Box sx={{ padding: "75px" }}>
@@ -43,7 +54,7 @@ const WishlistPage = () => {
       ) : (
         <Grid container spacing={2}>
           {wishlistItems.map((item) => (
-            <Grid item xs={12} sm={6} md={4} key={item._id}>
+            <Grid item xs={12} sm={6} md={4} key={item._d}>
               <Card
                 sx={{
                   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
@@ -108,7 +119,7 @@ const WishlistPage = () => {
                       borderRadius: "5px",
                       "&:hover": { backgroundColor: "#a8001b" },
                     }}
-                    onClick={() => removeFromWishlist(item._id)}
+                    onClick={() => handleDelete(item.id)} // Trigger the delete function on click
                   >
                     Remove
                   </Button>
@@ -116,7 +127,9 @@ const WishlistPage = () => {
               </Card>
             </Grid>
           ))}
-          <Grid item xs={12} sx={{ marginTop: "20px" }}>
+        // Inside the return statement
+        <Grid item xs={12} sx={{ marginTop: "20px" }}>
+          <Link to="/" style={{ textDecoration: "none" }}> {/* Wrap the button with Link */}
             <Button
               variant="contained"
               size="small"
@@ -131,11 +144,11 @@ const WishlistPage = () => {
                 marginRight: "10px",
                 "&:hover": { backgroundColor: "#a8001b" },
               }}
-              onClick={clearWishlist}
             >
-              Clear Wishlist
+              Go to Home
             </Button>
-          </Grid>
+          </Link>
+        </Grid>
         </Grid>
       )}
     </Box>
