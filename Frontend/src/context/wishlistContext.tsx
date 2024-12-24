@@ -21,13 +21,31 @@ export const wishlistContext = createContext<WishlistContextType | undefined>(un
 export const WishlistProvider = ({ children }: { children: React.ReactNode }) => {
   const [wishlistItems, setWishlistItems] = useState<Movie[]>([]);
 
-  const addToWishlist = (movie: Movie) => {
-    // Ensure the movie has the imdbID as _id
-    setWishlistItems((prevItems) => [
-      ...prevItems,
-      { ...movie, _id: movie.imdbID }, // Ensure _id is set to imdbID
-    ]);
+  const addToWishlist = async (movie: Movie) => {
+    try {
+      // Send a POST request to the server
+      const response = await fetch("http://localhost:3000/movies/favorites", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(movie),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to add movie to the database");
+      }
+  
+      // Add to the local wishlist state only after successful POST
+      setWishlistItems((prevItems) => [
+        ...prevItems,
+        { ...movie, _id: movie.imdbID }, // Ensure _id is set to imdbID
+      ]);
+    } catch (error) {
+      console.error("Error adding movie to wishlist:", error);
+    }
   };
+  
   
 
   const removeFromWishlist = (id: string) => {

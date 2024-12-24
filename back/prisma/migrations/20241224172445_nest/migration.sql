@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "FavoriteMovie" ALTER COLUMN "image1" DROP DEFAULT,
+ALTER COLUMN "image1" SET DATA TYPE TEXT;

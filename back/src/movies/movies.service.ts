@@ -10,8 +10,23 @@ export class MoviesService {
   }
 
   async addFavorite(data: any) {
-    return this.prisma.favoriteMovie.create({ data });
+    const movieData = {
+      title: data.title,
+      year: data.year,
+      imdbID: data.imdbID,
+      poster: data.poster || "https://via.placeholder.com/200x300?text=No+Poster", // Default if no poster is provided
+      director: data.director || "Unknown", // Provide a default director value
+      image1: data.image1 || "https://via.placeholder.com/200x300?text=No+Image", // Default if no image is provided
+    };
+  
+    return this.prisma.favoriteMovie.create({
+      data: movieData,
+    });
   }
+  
+  
+  
+  
 
   async updateFavorite(id: number, data: any) {
     return this.prisma.favoriteMovie.update({

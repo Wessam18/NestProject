@@ -9,6 +9,7 @@ export declare class MoviesService {
         poster: string;
         imdbID: string;
         director: string;
+        image1: string;
     }[]>;
     addFavorite(data: any): Promise<{
         id: number;
@@ -17,6 +18,7 @@ export declare class MoviesService {
         poster: string;
         imdbID: string;
         director: string;
+        image1: string;
     }>;
     updateFavorite(id: number, data: any): Promise<{
         id: number;
@@ -25,6 +27,7 @@ export declare class MoviesService {
         poster: string;
         imdbID: string;
         director: string;
+        image1: string;
     }>;
     deleteFavorite(id: number): Promise<{
         id: number;
@@ -33,5 +36,6 @@ export declare class MoviesService {
         poster: string;
         imdbID: string;
         director: string;
+        image1: string;
     }>;
 }

@@ -20,7 +20,17 @@ let MoviesService = class MoviesService {
         return this.prisma.favoriteMovie.findMany();
     }
     async addFavorite(data) {
-        return this.prisma.favoriteMovie.create({ data });
+        const movieData = {
+            title: data.title,
+            year: data.year,
+            imdbID: data.imdbID,
+            poster: data.poster || "https://via.placeholder.com/200x300?text=No+Poster",
+            director: data.director || "Unknown",
+            image1: data.image1 || "https://via.placeholder.com/200x300?text=No+Image",
+        };
+        return this.prisma.favoriteMovie.create({
+            data: movieData,
+        });
     }
     async updateFavorite(id, data) {
         return this.prisma.favoriteMovie.update({

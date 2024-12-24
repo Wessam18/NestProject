@@ -15,10 +15,12 @@ datasource db {
 
 
 model FavoriteMovie {
-  id      Int    @id @default(autoincrement())
-  title   String
-  year    String
-  poster  String
-  imdbID  String @unique
+  id        Int    @id @default(autoincrement())
+  title     String
+  year      String
+  poster    String
+  imdbID    String @unique
   director String
+  image1    String // Add image1 field
 }
+
