@@ -1,68 +1,76 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { Link } from 'react-router-dom'; // Import Link for navigation
-import ProductCard from './ProductCard'; // Import your ProductCard component
+import { useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import ProductCard from "./ProductCard";
+import { useWishlist } from "../context/wishlistContext";
 
-// Movie interface to type the movie data
+// Shared Movie interface
 interface Movie {
-  Title: string;
-  Year: string;
-  Poster: string;
-  imdbID: string;
+  _id: string;
+  title: string;
+  image1: string;
+  year: string;
+  imdbID: string; // Include imdbID in the interface
 }
 
+// Component
 const SearchMovies = () => {
-  const [query, setQuery] = useState('');
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [query, setQuery] = useState("");
+  const [movies, setMovies] = useState<Movie[]>([]); // Use Movie interface for state
+  const { addToWishlist } = useWishlist();
 
   // Fetch movies from OMDb API
   const searchMovies = async () => {
     try {
       const response = await axios.get(`https://www.omdbapi.com/?s=${query}&apikey=800bdf56`);
-      setMovies(response.data.Search || []);
+      const apiMovies = response.data.Search || [];
+      
+      // Map API response to Movie type
+      const mappedMovies: Movie[] = apiMovies.map((movie: any) => ({
+        _id: movie.imdbID,
+        title: movie.Title,
+        image1: movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/200x300?text=No+Poster",
+        year: movie.Year,
+        imdbID: movie.imdbID,
+      }));
+      
+      setMovies(mappedMovies);
     } catch (error) {
-      console.error('Error fetching movies:', error);
+      console.error("Error fetching movies:", error);
     }
   };
 
-  // Add a movie to favorites
+  // Add a movie to wishlist
   const addToFavorites = (movie: Movie) => {
-    const currentFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-    if (!currentFavorites.find((fav: Movie) => fav.imdbID === movie.imdbID)) {
-      currentFavorites.push(movie);
-      localStorage.setItem('favorites', JSON.stringify(currentFavorites));
-    }
+    addToWishlist(movie);
   };
 
   return (
     <div>
       <h1>Search Movies</h1>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search for a movie..."
-          style={{ marginRight: '10px' }}
+          style={{ marginRight: "10px" }}
         />
         <button onClick={searchMovies}>Search</button>
-
-        {/* Favorites Button */}
-        <Link to="/favorites" style={{ textDecoration: 'none', marginLeft: '10px' }}>
+        <Link to="/favorites" style={{ textDecoration: "none", marginLeft: "10px" }}>
           <button>Favorites</button>
         </Link>
       </div>
 
-      {/* Grid of ProductCards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "16px" }}>
         {movies.map((movie) => (
           <ProductCard
             key={movie.imdbID}
-            _id={movie.imdbID}
-            title={movie.Title}
-            image1={movie.Poster !== 'N/A' ? movie.Poster : 'https://via.placeholder.com/200x300?text=No+Poster'}
-            year={movie.Year}
-            addToFavorites={addToFavorites} // Pass addToFavorites as a prop
+            _id={movie._id}
+            title={movie.title}
+            image1={movie.image1}
+            year={movie.year}
+            addToFavorites={() => addToFavorites(movie)}
           />
         ))}
       </div>

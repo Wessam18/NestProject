@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext } from "react";
 
 interface Movie {
+  imdbID: string;
   _id: string;
   title: string;
   image1: string;
@@ -21,8 +22,13 @@ export const WishlistProvider = ({ children }: { children: React.ReactNode }) =>
   const [wishlistItems, setWishlistItems] = useState<Movie[]>([]);
 
   const addToWishlist = (movie: Movie) => {
-    setWishlistItems((prevItems) => [...prevItems, movie]);
+    // Ensure the movie has the imdbID as _id
+    setWishlistItems((prevItems) => [
+      ...prevItems,
+      { ...movie, _id: movie.imdbID }, // Ensure _id is set to imdbID
+    ]);
   };
+  
 
   const removeFromWishlist = (id: string) => {
     setWishlistItems((prevItems) => prevItems.filter((item) => item._id !== id));
