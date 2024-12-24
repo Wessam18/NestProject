@@ -1,9 +1,26 @@
+import React, { useEffect, useState } from "react";
 import { Box, Grid, Typography, Button, Card, CardActions, CardContent, CardMedia, TextField } from "@mui/material";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import axios from "axios"; // Import axios for making API requests
 import { useWishlist } from "../context/wishlistContext"; // Import custom hook
 
 const WishlistPage = () => {
-  const { wishlistItems, removeFromWishlist, clearWishlist, updateWishlistItem } = useWishlist(); // Use custom hook
+  const [wishlistItems, setWishlistItems] = useState<any[]>([]); // State to hold the fetched wishlist items
+  const { removeFromWishlist, clearWishlist, updateWishlistItem } = useWishlist(); // Use custom hook
+
+  // Fetch movies from the backend when the component mounts
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/movies/favorites");
+        setWishlistItems(response.data); // Update the state with the fetched data
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
+    };
+
+    fetchMovies();
+  }, []); // Empty dependency array ensures this runs only once when the component mounts
 
   const handleUpdate = (id: string, updatedTitle: string) => {
     const itemToUpdate = wishlistItems.find((item) => item._id === id);
