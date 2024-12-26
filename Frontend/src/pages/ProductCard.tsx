@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'; // Icon for "Add to Favorites"
+import DeleteIcon from '@mui/icons-material/Delete'; // Icon for "Remove from Favorites"
 import { Link } from 'react-router-dom';
 
 // Define the types for props passed to ProductCard
@@ -16,16 +17,17 @@ interface Movie {
   imdbID: string;
 }
 
-// Define the types for props passed to ProductCard
 interface ProductCardProps {
   _id: string;
   title: string;
   image1: string;
   year: string;
-  addToFavorites: (movie: Movie) => void;
+  addOrRemove: (movie: Movie) => void;
+  buttonLabel: string;
+  iconType: 'add' | 'remove'; // Add or remove to toggle between icons
 }
 
-const ProductCard = ({ _id, title, image1, year, addToFavorites }: ProductCardProps) => {
+const ProductCard = ({ _id, title, image1, year, addOrRemove, buttonLabel, iconType }: ProductCardProps) => {
   return (
     <Box sx={{ margin: '20px', maxWidth: '320px', display: 'flex', flexDirection: 'column' }}>
       <Card
@@ -93,7 +95,6 @@ const ProductCard = ({ _id, title, image1, year, addToFavorites }: ProductCardPr
             justifyContent: 'space-between',
           }}
         >
-          {/* Add to Favorites Button with Icon */}
           <Button
             variant="contained"
             color="primary"
@@ -105,10 +106,14 @@ const ProductCard = ({ _id, title, image1, year, addToFavorites }: ProductCardPr
               fontWeight: 'bold',
               '&:hover': { backgroundColor: '#a8001b' },
             }}
-            onClick={() => addToFavorites({ Title: title, Year: year, Poster: image1, imdbID: _id })} // Handle adding to favorites
+            onClick={() => addOrRemove({ Title: title, Year: year, Poster: image1, imdbID: _id })}
           >
-            <FavoriteBorderIcon sx={{ marginRight: '8px' }} />
-            Add to Favorites
+            {iconType === 'add' ? (
+              <FavoriteBorderIcon sx={{ marginRight: '8px' }} />
+            ) : (
+              <DeleteIcon sx={{ marginRight: '8px' }} />
+            )}
+            {buttonLabel}
           </Button>
         </CardActions>
       </Card>

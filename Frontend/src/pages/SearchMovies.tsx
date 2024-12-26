@@ -65,13 +65,17 @@ const SearchMovies = () => {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "16px" }}>
         {movies.map((movie) => (
           <ProductCard
-            key={movie.imdbID}
-            _id={movie._id}
-            title={movie.title}
-            image1={movie.image1}
-            year={movie.year}
-            addToFavorites={() => addToFavorites(movie)}
-          />
+          key={movie.imdbID}
+          _id={movie._id}
+          title={movie.title}
+          image1={movie.image1}
+          year={movie.year}
+          addOrRemove={() => addToFavorites(movie)}
+          buttonLabel="Add to Favorites"
+          iconType="add" // Use 'add' icon
+        />
+        
+        
         ))}
       </div>
     </div>
