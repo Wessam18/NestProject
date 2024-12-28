@@ -5,7 +5,6 @@ import WishlistPage from './pages/WishlistPage';
 
 const App = () => (
     <WishlistProvider>
-
         <Router>
             <Routes>
                 <Route path="/" element={<SearchMovies />} />
