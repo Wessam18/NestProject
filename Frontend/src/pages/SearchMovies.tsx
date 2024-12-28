@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { Key, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
-import ProductCard from "./ProductCard";
+import ProductCard from "../components/ProductCard";
 import { useWishlist } from "../context/wishlistContext";
+import SearchAppBar from "../components/navBar";
 
 // Shared Movie interface
 interface Movie {
+  id: Key | null | undefined;
   _id: string;
   title: string;
   image1: string;
@@ -20,7 +21,7 @@ const SearchMovies = () => {
   const { addToWishlist } = useWishlist();
 
   // Fetch movies from OMDb API
-  const searchMovies = async () => {
+  const search = async () => {
     try {
       const response = await axios.get(`https://www.omdbapi.com/?s=${query}&apikey=800bdf56`);
       const apiMovies = response.data.Search || [];
@@ -47,19 +48,11 @@ const SearchMovies = () => {
 
   return (
     <div>
-      <h1>Search Movies</h1>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search for a movie..."
-          style={{ marginRight: "10px" }}
-        />
-        <button onClick={searchMovies}>Search</button>
-        <Link to="/favorites" style={{ textDecoration: "none", marginLeft: "10px" }}>
-          <button>Favorites</button>
-        </Link>
+      <div>
+        <SearchAppBar query={query} setQuery={setQuery} search={search} />
+        <div>
+          <h2>Movie Results</h2>
+        </div>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "16px" }}>

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Box, Grid, Typography, Button } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import ProductCard from "./ProductCard"; // Import ProductCard
+import ProductCard from "../components/ProductCard"; // Import ProductCard
+import SearchAppBar from "../components/navBar";
 
 const WishlistPage = () => {
   const [wishlistItems, setWishlistItems] = useState<any[]>([]);
@@ -30,8 +31,9 @@ const WishlistPage = () => {
     }
   };
 
-
   return (
+  <div>
+    
     <Box sx={{ padding: "75px" }}>
       <Typography variant="h4" sx={{ fontWeight: "bold" }} gutterBottom>
         Wishlist
@@ -57,26 +59,10 @@ const WishlistPage = () => {
               />
             </Grid>
           ))}
-          <Grid item xs={12} sx={{ marginTop: "20px" }}>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <Button
-                variant="contained"
-                size="large"
-                sx={{
-                  backgroundColor: "#D10024",
-                  fontWeight: "bold",
-                  borderRadius: "5px",
-                  width: "100%",
-                  "&:hover": { backgroundColor: "#a8001b" },
-                }}
-              >
-                Go to Home
-              </Button>
-            </Link>
-          </Grid>
         </Grid>
       )}
     </Box>
+  </div>
   );
 };
 
