@@ -36,7 +36,8 @@ const ProductCard = ({ _id, title, image1, year, addOrRemove, buttonLabel, iconT
           border: '1px solid transparent',
           display: 'flex',
           flexDirection: 'column',
-          height: '100%',
+          height: '420px', // Fixed height for consistency
+          width: '100%', // Fills the parent container
           transition: 'border 0.3s ease',
           '&:hover': {
             border: '2px solid #D10024',

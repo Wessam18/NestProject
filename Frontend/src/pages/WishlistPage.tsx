@@ -3,6 +3,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ProductCard from "../components/ProductCard"; // Import ProductCard
+import SearchAppBar from "../components/navBar";
 
 const WishlistPage = () => {
   const [wishlistItems, setWishlistItems] = useState<any[]>([]);
@@ -32,6 +33,7 @@ const WishlistPage = () => {
 
   return (
   <div>
+    <SearchAppBar  />
     
     <Box sx={{ padding: "75px" }}>
       <Typography variant="h4" sx={{ fontWeight: "bold" }} gutterBottom>

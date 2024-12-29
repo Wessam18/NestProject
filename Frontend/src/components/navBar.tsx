@@ -1,16 +1,14 @@
-// SearchAppBar.tsx
-import  { useState } from "react";
+import { useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -54,13 +52,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 interface SearchAppBarProps {
-  onSearchResults: (movies: any[]) => void; // Callback to pass results to parent
+  onSearchResults?: (movies: any[]) => void;
 }
 
-export default function SearchAppBar({ onSearchResults }: SearchAppBarProps) {
-  const [query, setQuery] = useState(""); // Local state for search query
+const SearchAppBar: React.FC<SearchAppBarProps> = ({ onSearchResults }) => {
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate();
 
-  // Fetch movies from OMDb API
   const search = async () => {
     try {
       const response = await axios.get(
@@ -68,7 +66,6 @@ export default function SearchAppBar({ onSearchResults }: SearchAppBarProps) {
       );
       const apiMovies = response.data.Search || [];
 
-      // Map API response to a usable structure
       const mappedMovies = apiMovies.map((movie: any) => ({
         _id: movie.imdbID,
         title: movie.Title,
@@ -80,7 +77,12 @@ export default function SearchAppBar({ onSearchResults }: SearchAppBarProps) {
         imdbID: movie.imdbID,
       }));
 
-      onSearchResults(mappedMovies); // Pass results to parent
+      if (onSearchResults) {
+        onSearchResults(mappedMovies); // Pass results if callback is provided
+      }
+
+      // Navigate to SearchMovies with results
+      navigate("/", { state: { movies: mappedMovies } });
     } catch (error) {
       console.error("Error fetching movies:", error);
     }
@@ -90,13 +92,6 @@ export default function SearchAppBar({ onSearchResults }: SearchAppBarProps) {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          />
           <Typography
             variant="h6"
             noWrap
@@ -104,7 +99,6 @@ export default function SearchAppBar({ onSearchResults }: SearchAppBarProps) {
             to="/"
             sx={{
               flexGrow: 1,
-              display: { xs: "none", sm: "block" },
               textDecoration: "none",
               color: "inherit",
             }}
@@ -135,8 +129,15 @@ export default function SearchAppBar({ onSearchResults }: SearchAppBarProps) {
               Favorites
             </Button>
           </Link>
+          <Link to="/home" style={{ textDecoration: "none", marginLeft: "10px" }}>
+            <Button variant="contained" color="primary">
+              Home
+            </Button>
+          </Link>
         </Toolbar>
       </AppBar>
     </Box>
   );
-}
+};
+
+export default SearchAppBar;
